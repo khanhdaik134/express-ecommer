@@ -40,22 +40,22 @@ class Model {
     });
   }
   getById(id, callback){
-    connection.query(`SELECT * FROM ${this.config.table} WHERE id = ?`, id,  (res, err) => {
+    connection.query(`SELECT * FROM ${this.table} WHERE id = ?`, id,  (res, err) => {
       return callback(res, err);
     });
   }
   create(data, callback){
-    connection.query(`INSERT INTO ${this.config.table} SET ?`, data,  (res, err) => {
+    connection.query(`INSERT INTO ${this.table} SET ?`, data,  (res, err) => {
       return callback(res, err);
     });
   }
   update(data, id, callback){
-    connection.query(`UPDATE ${this.config.table} SET ? WHERE id = ?`, [data, id],  (res, err) => {
+    connection.query(`UPDATE ${this.table} SET ? WHERE id = ?`, [data, id],  (res, err) => {
       return callback(res, err);
     });
   }
   delete(id, callback){
-    connection.query(`DELETE FROM ${this.config.table} WHERE id = ?`, id,  (res, err) => {
+    connection.query(`DELETE FROM ${this.table} WHERE id = ?`, id,  (res, err) => {
       return callback(res, err);
     });
   }

@@ -1,7 +1,7 @@
 'use-strict';
 
-var brandRoute = require('./brand');
+var orderController = require('../controllers/OrderController');
 
 module.exports = function(app) {
-  app.use('/api/brands', brandRoute);
+  app.post('/api/orders', orderController.create);
 }
