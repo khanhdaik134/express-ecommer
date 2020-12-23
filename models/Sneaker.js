@@ -7,4 +7,5 @@ class Sneaker extends Model {
 
   }
 };
+Sneaker.prototype.table = 'sneakers';
 module.exports = Sneaker;

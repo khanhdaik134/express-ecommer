@@ -30,18 +30,28 @@ exports.create = (req, res) => {
   const email = req.body.email;
   const address = req.body.address;
   const paymentMethod = req.body.payment_method;
-  const orderDetail = req.body.order_detail ? JSON.parse(req.body.order_detail) : null;
+  let orderDetail = req.body.order_detail ? JSON.parse(req.body.order_detail) : [];
 
   const order = [
     userId, fullName, phone, email, address, paymentMethod
   ];
-  console.log(order);
 
   Order.prototype.create(order, (data, err) => {
-    if (err)
+    if (err) {
       return res.send(err);
-    console.log(data);
-    return res.status(200).send(data);
+    }
+    if (data) {
+      orderDetail = orderDetail.map((el) => {
+        return [data.insertId, ...el];
+      });
+      Order.prototype.createMultipleOrder(orderDetail, (response, error) => {
+        if (error) {
+          console.log(err);
+          return res.send(err);
+        }
+        res.status(200).send(response);
+      })
+    }
   })
 
 }

@@ -17,12 +17,12 @@ class Order extends Model{
     this.updated_at = order.updated_at;
   }
   create(order, callback){
-    connection.query(`INSERT INTO ${this.table} (user_id, full_name, phone, email, address, payment_method) VALUES (?,?,?,?,?,?)`, order,  (res, err) => {
+    connection.query(`INSERT INTO ${this.table} (user_id, full_name, phone, email, address, payment_method) VALUES (?,?,?,?,?,?)`, order,  (err, res) => {
       return callback(res, err);
     });
   }
   createMultipleOrder(data, callback){
-    connection.query(`INSERT INTO ${this.table} VALUES ?`, data,  (res, err) => {
+    connection.query(`INSERT INTO order_detail (order_id, sneaker_id, amount) VALUES ?`, [data],  (err, res) => {
       return callback(res, err);
     });
   }
