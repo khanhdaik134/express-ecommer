@@ -6,7 +6,7 @@ exports.index = (req, res) => {
   const limit = req.query.limit || 10;
   const offset = req.query.offset || 0;
   const sort = req.query.sort || 'DESC'
-  const orderBy = req.query.order || `created_at ${sort}`;
+  const orderBy = req.query.order || `sneakers.id ${sort}`;
   const search = req.query.search;
   const brandId = req.query.brand;
   let searchObj = {};
