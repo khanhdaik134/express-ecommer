@@ -13,7 +13,7 @@ app.use(formData.parse({
   uploadDir: os.tmpdir(),
   autoClean: true
 }));
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
@@ -30,3 +30,28 @@ app.use(bodyParser.json());
 
 const routes = require('./routes/routes');
 routes(app);
+
+const db = require('./models/Model');
+
+const Role = db.role;
+
+db.sequelize.sync();
+
+// initial();
+
+// function initial() {
+//   Role.create({
+//     id: 1,
+//     name: "user"
+//   });
+
+//   Role.create({
+//     id: 2,
+//     name: "moderator"
+//   });
+
+//   Role.create({
+//     id: 3,
+//     name: "admin"
+//   });
+// }

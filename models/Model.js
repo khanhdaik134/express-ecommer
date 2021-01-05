@@ -1,63 +1,74 @@
-'use strict';
-var connection = require('../database/config');
+const Sequelize = require("sequelize");
+const config = require("../database/config");
+const sequelize = new Sequelize(
+  config.DB,
+  config.USER,
+  config.PASSWORD,
+  {
+    host: config.HOST,
+    port: config.PORT,
+    dialect: config.dialect,
+    operatorsAliases: false,
 
-class Model {
-  constructor(model, table){
-    this.model = model;
-    this.table = table;
-  }
-  setConfig(config){
-    this.config = config;
-    this.validateConfig();
-  }
-  getConnection(){
-    return connection;
-  }
-  getTableName(){
-    return this.table;
-  }
-  validateConfig(){
-    // if (!this.config.model) throw new Error('Model is missing');
-    if (!this.config.table) throw new Error('Table name is missing');
-  }
-  objectToString(object){
-    let str = '';
-    let i = 0;
-    if (!object) return '';
-    for (const [key, value] of Object.entries(object)) {
-      str += i === 0 ? `WHERE ${key} ${value}` : ` AND ${key} ${value}`;
-      i++;
+    pool: {
+      max: config.pool.max,
+      min: config.pool.min,
+      acquire: config.pool.acquire,
+      idle: config.pool.idle
     }
-    return str;
   }
-  getAll(search, limit, offset, orderBy, callback){
-    let orderByStr = orderBy ? `ORDER BY ${orderBy}` : '';
-    let searchStr = search ? this.objectToString(search) : '';
-    let queryStr = `SELECT * FROM ${this.table} ${searchStr} ${orderByStr} LIMIT ${limit || 10} OFFSET ${offset || 0}`;
-    console.log(queryStr);
-    connection.query(queryStr, function (res, err) {
-      return callback(res, err);
-    });
-  }
-  getById(id, callback){
-    connection.query(`SELECT * FROM ${this.table} WHERE id = ?`, id,  (res, err) => {
-      return callback(res, err);
-    });
-  }
-  create(data, callback){
-    connection.query(`INSERT INTO ${this.table} SET ?`, data,  (res, err) => {
-      return callback(res, err);
-    });
-  }
-  update(data, id, callback){
-    connection.query(`UPDATE ${this.table} SET ? WHERE id = ?`, [data, id],  (res, err) => {
-      return callback(res, err);
-    });
-  }
-  delete(id, callback){
-    connection.query(`DELETE FROM ${this.table} WHERE id = ?`, id,  (res, err) => {
-      return callback(res, err);
-    });
-  }
-}
-module.exports = Model;
+);
+
+const db = {};
+
+db.Sequelize = Sequelize;
+db.sequelize = sequelize;
+
+db.user = require("./User")(sequelize, Sequelize);
+db.role = require("./Role")(sequelize, Sequelize);
+db.category = require("./Category")(sequelize, Sequelize);
+db.order = require("./Order")(sequelize, Sequelize);
+db.payment = require("./Payment")(sequelize, Sequelize);
+db.product = require("./Product")(sequelize, Sequelize);
+
+db.category.hasOne(db.product, {
+  foreignKey: "category_id"
+});
+db.product.belongsTo(db.category, {
+  foreignKey: "category_id"
+});
+db.user.hasMany(db.order, {
+  foreignKey: "user_id"
+});
+db.order.belongsTo(db.user, {
+  foreignKey: "user_id"
+});
+db.order.hasOne(db.payment, {
+  foreignKey: "order_id"
+});
+db.product.belongsToMany(db.order, {
+  through: "order_detail",
+  foreignKey: "product_id",
+  otherKey: "order_id"
+});
+
+db.order.belongsToMany(db.product, {
+  through: "order_detail",
+  foreignKey: "order_id",
+  otherKey: "product_id"
+});
+
+db.role.belongsToMany(db.user, {
+  through: "user_roles",
+  foreignKey: "role_id",
+  otherKey: "user_id"
+});
+db.user.belongsToMany(db.role, {
+  through: "user_roles",
+  foreignKey: "user_id",
+  otherKey: "role_id"
+});
+
+db.ROLES = ["user", "admin", "moderator"];
+
+module.exports = db;

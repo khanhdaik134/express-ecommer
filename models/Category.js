@@ -1,17 +1,17 @@
 module.exports = (sequelize, Sequelize) => {
-  const Payment = sequelize.define("payments", {
+  const Category = sequelize.define("categories", {
     id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
       autoIncrement: true
     },
-    charge: {
-      type: Sequelize.DOUBLE
+    name: {
+      type: Sequelize.STRING
     },
-    message: {
+    logo: {
       type: Sequelize.STRING
     }
   });
 
-  return Payment;
+  return Category;
 };

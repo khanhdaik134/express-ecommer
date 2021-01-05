@@ -1,20 +1,20 @@
 module.exports = (sequelize, Sequelize) => {
-  const Order = sequelize.define("orders", {
+  const Product = sequelize.define("products", {
     id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
       autoIncrement: true
     },
-    full_name: {
-      type: Sequelize.STRING,
-    },
-    phone: {
+    name: {
       type: Sequelize.STRING
     },
-    email: {
+    price: {
+      type: Sequelize.DOUBLE
+    },
+    description: {
       type: Sequelize.STRING
     },
-    address: {
+    image: {
       type: Sequelize.STRING
     },
     status: {
@@ -22,5 +22,5 @@ module.exports = (sequelize, Sequelize) => {
     }
   });
 
-  return Order;
+  return Product;
 };
