@@ -46,14 +46,20 @@ db.order.belongsTo(db.user, {
 db.order.hasOne(db.payment, {
   foreignKey: "order_id"
 });
+OrderDetail = sequelize.define('order_detail', {
+  number: {
+    type: Sequelize.INTEGER,
+    defaultValue: 1
+  }
+});
 db.product.belongsToMany(db.order, {
-  through: "order_detail",
+  through: OrderDetail,
   foreignKey: "product_id",
   otherKey: "order_id"
 });
 
 db.order.belongsToMany(db.product, {
-  through: "order_detail",
+  through: OrderDetail,
   foreignKey: "order_id",
   otherKey: "product_id"
 });

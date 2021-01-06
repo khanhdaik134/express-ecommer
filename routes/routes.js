@@ -5,9 +5,10 @@ const { verifySignUp, authJwt } = require("../middleware/index");
 const authController = require("../controllers/AuthController");
 const productController = require("../controllers/ProductController");
 
-var orderController = require('../controllers/OrderController');
-var sneakerController = require('../controllers/SneakerController');
-var brandController = require('../controllers/BrandController');
+const orderController = require('../controllers/OrderController');
+const sneakerController = require('../controllers/SneakerController');
+const brandController = require('../controllers/BrandController');
+const categoryController = require('../controllers/CategoryController');
 
 module.exports = function(app) {
 
@@ -37,11 +38,14 @@ module.exports = function(app) {
 
   // products
   app.get('/api/products', productController.index);
-  app.get('/api/products/:id', sneakerController.show);
+  // app.get('/api/products/:id', sneakerController.show);
+
+  //categories
+  app.get('/api/categories', categoryController.index);
 
   //orders
 
   app.get('/api/orders', [authJwt.verifyToken], orderController.index);
-
+  app.post('/api/orders', orderController.create);
 
 }
